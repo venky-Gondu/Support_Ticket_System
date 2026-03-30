@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: support_db
+    environment:
+      POSTGRES_DB: support_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Venky@4455
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
