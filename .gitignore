@@ -40,3 +40,5 @@ postgres_data/
 
 # configuration properties
 src/main/resources/application.properties
+
+.gitignore
