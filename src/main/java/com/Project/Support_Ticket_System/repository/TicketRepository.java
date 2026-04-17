@@ -1,12 +1,15 @@
 package com.Project.Support_Ticket_System.repository;
 import com.Project.Support_Ticket_System.entity.*;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -56,6 +59,11 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     // 5. Category Breakdown (GROUP BY)
     @Query("SELECT t.category, COUNT(t) FROM Ticket t GROUP BY t.category")
     List<Object[]> getCategoryBreakdown();
+
+
+    @Modifying
+    @Query("DELETE FROM Ticket t WHERE t.createdAt < :cutoffDate")
+    int deleteByCreatedAtBefore(LocalDateTime cutoff);
 }
 
 
