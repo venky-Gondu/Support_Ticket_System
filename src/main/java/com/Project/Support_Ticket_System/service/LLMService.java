@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.*;
 
 @Service
@@ -24,6 +25,7 @@ public class LLMService {
 
     private final ObjectMapper objectMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(LLMService.class);
 
     public LLMService(
                       LLMProperties llmProperties,
@@ -36,7 +38,7 @@ public class LLMService {
 
     public classificationResponse classifyTicket(String description){
          if(llmProperties.getApiKey()==null || llmProperties.getApiKey().isEmpty()){
-             System.out.println("LLM API KEY is not found Returning null Suggestions ");
+             logger.warn("LLM API Key not configured. Returning null suggestions.");
              return new classificationResponse(null,null);
          }
 
@@ -75,7 +77,7 @@ public class LLMService {
                     Map<?, ?> message = (Map<?, ?>) choice.get("message");
                     String content = (String) message.get("content");
 
-                    System.out.println("LLM Raw Response: " + content);
+                    logger.info("LLM Raw Response {}", content);
 
                     // Parse JSON with Jackson
                     LlmClassificationResult result = parseLlmResponse(content);
@@ -91,10 +93,10 @@ public class LLMService {
 
         }
      catch (WebClientResponseException e) {
-        System.err.println("LLM API Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+         logger.error("LLM API Error: {} - {}", e.getStatusCode(), e.getResponseBodyAsString());
     } catch (Exception e) {
-        System.err.println("LLM Service Failed: " + e.getMessage());
-        e.printStackTrace();
+            logger.error("LLM Service Failed: {}", e.getMessage(), e);
+            e.printStackTrace();
     }
 
         return new classificationResponse(null, null);

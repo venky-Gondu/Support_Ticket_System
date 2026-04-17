@@ -7,6 +7,7 @@ import com.Project.Support_Ticket_System.entity.Category;
 import com.Project.Support_Ticket_System.entity.Priority;
 import com.Project.Support_Ticket_System.entity.Status;
 import com.Project.Support_Ticket_System.entity.Ticket;
+import com.Project.Support_Ticket_System.exception.ResourceNotFoundException;
 import com.Project.Support_Ticket_System.repository.TicketRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -55,11 +56,11 @@ public class TicketService {
         tickets.sort(Comparator.comparing(Ticket::getCreatedAt).reversed());
         return tickets.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
-    // Read Operation (Optimization: readOnly = true)
     @Transactional(readOnly = true)
     public TicketResponse getTicketById(Long id) {
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ticket not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Ticket not found with id: " + id));
         return mapToResponse(ticket);
     }
 

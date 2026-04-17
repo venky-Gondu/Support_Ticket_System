@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 @RestController
-@RequestMapping("/api/tickets/")
+@RequestMapping("/api/tickets")
 public class TicketController {
 
     private final TicketService ticketService;
@@ -23,13 +23,13 @@ public class TicketController {
         this.ticketService = ticketService;
     }
     // Post Mapping for Creating Ticket.
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<TicketResponse> createTicket(@Valid @RequestBody CreateTicketRequest request){
         TicketResponse response=ticketService.creteTicket(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<TicketResponse>> getTickets(
             @RequestParam(required = false) Category category,
             @RequestParam(required = false) Priority priority,
