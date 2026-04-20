@@ -4,10 +4,30 @@ services:
     image: postgres:16-alpine
     container_name: support_db
     environment:
-      POSTGRES_DB: support_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Venky@4455
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: support_ticket_classify_system
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATA_SOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATA_SOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATA_SOURCE_PASSWORD}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_API_URL=${LLM_API_URL}
+      - LLM_API_MODEL=${LLM_API_MODEL}
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - db
+    command: >
+      sh -c "until nc -z db:5432; do echo 'Waiting for DB...'; sleep 2; done;
+             java -jar /app/Support_Ticket_System.jar"
