@@ -1,0 +1,62 @@
+`HELP.md
+target/
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+mvnw
+mvnw.cmd
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+#Datavolume
+postgres_data/
+
+# configuration properties
+/src/main/resources/application.properties
+
+
+
+# Environment variables
+.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build targets
+target/
+build/
+frontend/node_modules/
+frontend/dist/
+
+
+# Logs
+*.log
