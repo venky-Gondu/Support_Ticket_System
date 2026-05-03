@@ -4,7 +4,6 @@ import com.Project.Support_Ticket_System.dto.StatsResponse;
 import com.Project.Support_Ticket_System.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.*;
 
 @Service
@@ -29,13 +28,13 @@ public class TicketStatsService {
             priorityBreakdown.put(priority.toLowerCase(), count);
         }
 
-        Map<String,Long> categoryBreakdown=new HashMap<>();
+        Map<String, Long> categoryBreakdown = new HashMap<>();
         List<Object[]> categoryResults=ticketRepository.getCategoryBreakdown();
-        for(Object[] row:categoryResults){
-            String category=row[0].toString();
-            Long count=((Number) row[1]).longValue();
-        }
-
+            for (Object[] row : categoryResults) {
+                String category = row[0].toString();
+                Long count = ((Number) row[1]).longValue();
+                categoryBreakdown.put(category, count);  // ← Keep lowercase as stored in DB
+            }
         return new StatsResponse(totalTickets, openTickets, avgPerDay, priorityBreakdown, categoryBreakdown);
 
     }
