@@ -11,6 +11,11 @@ services:
       - "5433:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: .
@@ -31,3 +36,12 @@ services:
     command: >
       sh -c "until nc -z db:5432; do echo 'Waiting for DB...'; sleep 2; done;
              java -jar /app/Support_Ticket_System.jar"
+  frontend:
+    build: ./frontend
+    container_name: support_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+volumes:
+  postgres-data:
